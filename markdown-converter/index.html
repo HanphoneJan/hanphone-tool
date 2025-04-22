@@ -194,25 +194,43 @@
         function convertToHTML(md) {
             //  预处理数学表达式，自动添加 $ 或 $$ 边界
             const processedMd = autoDetectAndWrapMath(md);
-            const html = marked.parse(processedMd);
-            return html;
+                // 临时替换 \\ 为特殊标记，避免被转义
+            const tempMarker = 'TEMP_DOUBLE_BACKSLASH';
+            let processed = processedMd.replace(/\\\\/g, tempMarker);
+            const html = marked.parse(processed);
+                // 恢复临时标记为 \\
+                console.log(html);
+            const html2 = html.replace(new RegExp(tempMarker, 'g'), '\\\\');
+            return html2;
         }
 
         /**
          * 自动检测数学表达式并添加 $ 或 $$ 边界
          */
-        function autoDetectAndWrapMath(md) {
-            const mathRegex = /\\\(.*?\\\)/g;
-            return md.replace(mathRegex, (match) => {
-                // 如果已经有 $ 或 $$，则不处理
-                if (match.startsWith('$') || match.endsWith('$')) {
+         function autoDetectAndWrapMath(md) {
+            // 先处理 \[...\] 替换为 $$...$$
+            let processed = md.replace(/\\\[(.*?)\\\]/gs, (match, content) => {
+                // 检查是否已经被 $$ 包裹
+                if (match.startsWith('$$') && match.endsWith('$$')) {
                     return match;
                 }
-                // 否则包裹成 $...$
-                return `$${match}$`;
+                return `$$${content}$$`;
             });
 
+            // 再处理 \(...\) 替换为 $...$
+            processed = processed.replace(/\\\((.*?)\\\)/gs, (match, content) => {
+                // 检查是否已经被 $ 包裹或属于 $$...$$ 的一部分
+                if (match.startsWith('$') && match.endsWith('$')) {
+                    return match;
+                }
+                // 检查内容是否包含 display math（避免嵌套问题）
+                if (content.includes('$$')) {
+                    return match;
+                }
+                return `$${content}$`;
+            });
 
+            return processed;
         }
 
         // 实时预览
