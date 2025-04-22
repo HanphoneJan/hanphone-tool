@@ -182,6 +182,7 @@
             </div>
         </div>
     </div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex/katex.js"></script>
     <script>
@@ -190,9 +191,31 @@
         const preview = document.getElementById('preview');
         const copyButton = document.getElementById('copy-button');
 
-        // 使用 marked.js 进行 Markdown 转换
         function convertToHTML(md) {
-            return marked.parse(md);
+            // Step 1: 预处理数学表达式，自动添加 $ 或 $$ 边界
+            const processedMd = autoDetectAndWrapMath(md);
+
+            // Step 4: 使用 marked 解析
+            const html = marked.parse(processedMd);
+
+            return html;
+        }
+
+        /**
+         * 自动检测数学表达式并添加 $ 或 $$ 边界
+         * 例如：(\frac{1}{2}) → $(\frac{1}{2})$
+         */
+        function autoDetectAndWrapMath(md) {
+            // 匹配形如 (\frac{...})、\left(...\right) 等数学表达式
+            const mathRegex = /(\\\(|\()(\\[a-zA-Z]+|\{|\}|\[|\]|\\left|\\right|\\frac|\\sqrt|\\sum|\\int|\\cdots)[^$]*?(\\\)|\))/g;
+            return md.replace(mathRegex, (match) => {
+                // 如果已经有 $ 或 $$，则不处理
+                if (match.startsWith('$') || match.endsWith('$')) {
+                    return match;
+                }
+                // 否则包裹成 $...$
+                return `$${match}$`;
+            });
         }
 
         // 实时预览
