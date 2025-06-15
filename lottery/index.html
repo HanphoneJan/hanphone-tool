@@ -1,0 +1,149 @@
+<!doctype html>
+<HTML>
+
+<HEAD>
+  <meta charset="UTF-8" />
+  <title>
+    Hanphone's Lottery
+  </title>
+  <meta name="description" content="This is Hanphone's personal Congratulation.Happy New Year!">
+  <meta name="keywords" content="Hanphone blog Congratulation Happy New Year!">
+  <link rel="shortcut icon" href="../../main/images/logo.ico" type="img/x-icon">
+  <style type="text/css">
+    body {
+      font-size: 2.5rem;
+      text-align: center;
+    }
+
+    input {
+      width: 350px;
+      height: 140px;
+      font-size: 80px;
+      margin-top: 3rem;
+    }
+  </style>
+  <TITLE>抽签网页版</TITLE>
+  <SCRIPT LANGUAGE="JavaScript">
+    let punish=["给你拍一张丑照","给我拍一张美照","运动半小时"];
+    let hPrize=["一个电子产品","k歌一小时", "自选外卖餐","说一段情话","吃KFC或M记","送一本书","画一幅面","请吃甜品",
+    "送你一个生活小用品","饮料自选","帮写半小时作业","送一件衣服","送一个搞怪礼物","鲜花","送一个周边","请看一次电影"];
+    let yPrize =["请吃寿司","自选外卖餐","自选一个周边","请吃炸鸡",
+    "送本书给你","送你一个随机礼物","给写一首诗","请吃蛋糕","自选盲盒","送一个生活小用品","请吃一个冰淇淋","饮料自选",
+    "帮写半小时作业","送一件衣服","送一个搞怪礼物","鲜花","随机盲盒" ,"送一个周边","请看一次电影"];
+    let wishes =[];
+
+    let currentName;
+    let index = -1;
+    let time;
+
+    function begin1() {
+      document.getElementById("btnBegin1").disabled = true;
+      chouqian1();
+    }
+    function chouqian1() {
+      if (yPrize.length > 0) {
+        index = Math.floor(Math.random() * 1000 % yPrize.length);
+        currentName = yPrize[index];
+        document.getElementById("result1").innerHTML = currentName;
+        time = window.setTimeout(chouqian1, 2);
+      } else {
+        document.getElementById("result1").innerHTML = "~结束~";
+      }
+    }
+    function end1() {
+      window.clearTimeout(time);
+      document.getElementById("btnBegin1").disabled = false;
+      //yPrize.splice(index, 1);
+    }
+
+        
+    function begin2() {
+      document.getElementById("btnBegin2").disabled = true;
+      chouqian2();
+    }
+    function chouqian2() {
+      if (hPrize.length > 0) {
+        index = Math.floor(Math.random() * 1000 % hPrize.length);
+        currentName = hPrize[index];
+        document.getElementById("result2").innerHTML = currentName;
+        time = window.setTimeout(chouqian2, 2);
+      } else {
+        document.getElementById("result2").innerHTML = "~结束~";
+      }
+    }
+    function end2() {
+      window.clearTimeout(time);
+      document.getElementById("btnBegin2").disabled = false;
+      //hPrize.splice(index, 1);
+    }
+
+    function begin3() {
+      document.getElementById("btnBegin3").disabled = true;
+      chouqian3();
+    }
+    function chouqian3() {
+      if (punish.length > 0) {
+        index = Math.floor(Math.random() * 1000 % punish.length);
+        currentName = punish[index];
+        document.getElementById("result3").innerHTML = currentName;
+        time = window.setTimeout(chouqian3, 2);
+      } else {
+        document.getElementById("result3").innerHTML = "~结束~";
+      }
+    }
+    function end3() {
+      window.clearTimeout(time);
+      document.getElementById("btnBegin3").disabled = false;
+      //wishes.splice(index, 1);
+    }
+
+    function begin4() {
+      document.getElementById("btnBegin4").disabled = true;
+      chouqian4();
+    }
+    function chouqian4() {
+      if (wishes.length > 0) {
+        index = Math.floor(Math.random() * 1000 % wishes.length);
+        currentName = wishes[index];
+        document.getElementById("result4").innerHTML = currentName;
+        time = window.setTimeout(chouqian4, 2);
+      } else {
+        document.getElementById("result4").innerHTML = "~结束~";
+      }
+    }
+    function end4() {
+      window.clearTimeout(time);
+      document.getElementById("btnBegin4").disabled = false;
+      //wishes.splice(index, 1);
+    }
+
+  </SCRIPT>
+
+<body>
+  <div id="qingxi">
+    <h3>晴樨的奖池</h3>
+    <h1 id="result1" style="color:blue;">^_^</h1>
+    <input type="button" value="开始" id="btnBegin1" onclick="begin1();">
+    <input type="button" value="结束" id="btnEnd1" onclick="end1();">
+  </div>
+  <div id="beize">
+    <h3>北泽的奖池</h3>
+    <h1 id="result2" style="color:blue;">^_^</h1>
+    <input type="button" value="开始" id="btnBegin2" onclick="begin2();">
+    <input type="button" value="结束" id="btnEnd2" onclick="end2();">
+  </div>
+  <div id="chengfa">
+    <h3>惩罚池</h3>
+    <h1 id="result3" style="color:blue;">^_^</h1>
+    <input type="button" value="开始" id="btnBegin3" onclick="begin3();">
+    <input type="button" value="结束" id="btnEnd3" onclick="end3();">
+  </div>
+  <div id="xinyuan">
+    <h3>心愿池</h3>
+    <h1 id="result4" style="color:blue;">^_^</h1>
+    <input type="button" value="开始" id="btnBegin4" onclick="begin4();">
+    <input type="button" value="结束" id="btnEnd4" onclick="end4();">
+  </div>
+</body>
+
+</HTML>
