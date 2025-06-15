@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>和AI寒枫聊天</title>
+    <style>
+        /* 响应式布局样式 */
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #007bff; /* 蓝色边框 */
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+        }
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            border-bottom: 1px solid #007bff; /* 蓝色底部边框 */
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .message {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .message.user {
+            justify-content: flex-end;
+            color: #007bff; /* 用户消息蓝色字体 */
+        }
+        .message.ai {
+            justify-content: flex-start;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 10px;
+        }
+        .message-content {
+            max-width: 70%;
+            word-wrap: break-word;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #f1f1f1; /* 默认背景色 */
+            color: black; /* 文字颜色 */
+        }
+        .message.user .message-content {
+            background-color: #c9ebf8; /* 用户消息背景色天蓝色 */
+        }
+        .message.ai .message-content {
+            background-color: #d3d3d3; /* AI消息背景色浅灰色 */
+        }
+        .input-container {
+            display: flex;
+        }
+        .input-container textarea {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            resize: none; /* 禁止手动调整大小 */
+            overflow-y: hidden; /* 隐藏垂直滚动条 */
+            word-wrap: break-word; /* 自动换行 */
+            white-space: pre-wrap; /* 保留空格和换行符 */
+            height: 2em; /* 初始高度调整为两倍 */
+        }
+        .input-container button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-left: none;
+            border-radius: 0 5px 5px 0;
+            background-color: #007bff; /* 蓝色按钮 */
+            color: white;
+            cursor: pointer;
+        }
+        .input-container button:hover {
+            background-color: #0056b3; /* 深蓝色按钮悬停效果 */
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="messages" id="messages">
+            <!-- 消息内容将动态插入这里 -->
+        </div>
+        <div class="input-container">
+            <textarea id="messageInput" placeholder="输入消息（支持emoji）..." rows="1"></textarea>
+            <button onclick="sendMessage()">发送</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (message === '') return;
+
+            // 打印用户发送的内容到控制台
+            console.log('用户发送:', message);
+
+            // 显示用户消息
+            const messagesContainer = document.getElementById('messages');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.innerHTML = `
+                <div class="message-content">${message}</div>
+                <img src="./pikachuface.jpg" alt="User Avatar" class="avatar">
+            `;
+            messagesContainer.appendChild(userMessage);
+
+            // 清空输入框
+            input.value = '';
+
+            // 获取所有消息内容
+            // const allMessages = Array.from(messagesContainer.getElementsByClassName('message-content'))
+            //     .map(msg => msg.textContent)
+            //     .join('\n');
+            const allMessages = message;
+
+            try {
+                // 向后端发送请求
+                const response = await fetch('https://www.hanphone.top/ai/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: allMessages })
+                });
+                const data = await response.json();
+
+                // 处理返回的JSON数组
+                let replyMessage = data.message;
+                if (typeof replyMessage !== 'string') {
+                    replyMessage = '服务器繁忙';
+                }
+
+                // 显示AI回复
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'message ai';
+                aiMessage.innerHTML = `
+                    <img src="./zhuxun.jpg" alt="AI Avatar" class="avatar">
+                    <div class="message-content">${replyMessage}</div>
+                `;
+                messagesContainer.appendChild(aiMessage);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                // 打印AI回复到控制台
+                console.log('AI回复:', replyMessage);
+
+                console.log('调试:', data);
+             } catch (error) {
+                console.error('Error:', error);
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'message ai';
+                aiMessage.innerHTML = `
+                    <img src="./zhuxun.jpg" alt="AI Avatar" class="avatar">
+                    <div class="message-content">服务器繁忙，请稍后再试或者进行刷新</div>
+                `;
+                messagesContainer.appendChild(aiMessage);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        // 自动调整输入框高度
+        const input = document.getElementById('messageInput');
+        input.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+
+    </script>
+</body>
+</html>
