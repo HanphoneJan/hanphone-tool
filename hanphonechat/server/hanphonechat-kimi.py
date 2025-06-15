@@ -8,7 +8,7 @@ from typing import List
 from asyncio import Lock
 
 # API 申请 https://platform.moonshot.cn
-authorization = "sk-gBKkuWCyf6l8F8iSa9D9skHDYGHvcWnxF5ErfXxCQL8uhp57"
+authorization = "xxxxx" # 请替换成你的API密钥
 headers = {
     "Authorization": f"Bearer {authorization}"
 }

@@ -11,7 +11,7 @@ from openai import OpenAI
 #https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety
 
 # API 申请 https://platform.moonshot.cn
-authorization = "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"
+authorization = "xx"
 headers = {
     "Authorization": f"Bearer {authorization}"
     "Content-Type: application/json"
