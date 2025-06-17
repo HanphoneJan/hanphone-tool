@@ -1,0 +1,23 @@
+{
+    "name":"新标签打开网页",
+    "version":"2",
+    "icons":{
+        "16":"icon.jpg",
+        "32":"icon.jpg",
+        "48":"icon.jpg",
+        "128":"icon.jpg"
+    },
+    "manifest_version":3,
+    "description":"新标签打开网页",
+    "content_scripts":[
+        {
+            "matches":[
+                "https://*/*"
+            ],
+            "js":[
+                "lib/jquery.min.js",
+                "url.js"
+            ]
+        }
+    ]
+}
