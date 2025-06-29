@@ -5,7 +5,9 @@ const gameState = {
     gridSize: 4,
     board: [],
     history: [],
-    gameOver: false
+    gameOver: false,
+    touchStartX: 0, // 新增
+    touchStartY: 0  // 新增
 };
 
 // DOM元素
@@ -238,6 +240,12 @@ function bindEvents() {
 
     // 棋盘大小选择
     elements.gridSizeSelect.addEventListener('change', resetGame);
+
+    // 触摸控制
+    if (elements.gameBoard) {
+        elements.gameBoard.addEventListener('touchstart', handleTouchStart, { passive: true });
+        elements.gameBoard.addEventListener('touchend', handleTouchEnd, { passive: true });
+    }
 }
 
 // 重置游戏
@@ -331,6 +339,53 @@ function undoMove() {
 
         elements.scoreDisplay.textContent = gameState.score;
         renderBoard();
+    }
+}
+
+// 触摸开始事件处理
+function handleTouchStart(event) {
+    if (event.touches.length !== 1) return;
+    gameState.touchStartX = event.touches[0].clientX;
+    gameState.touchStartY = event.touches[0].clientY;
+}
+
+// 触摸结束事件处理
+function handleTouchEnd(event) {
+    if (gameState.gameOver) return;
+    if (event.changedTouches.length !== 1) return;
+    const endX = event.changedTouches[0].clientX;
+    const endY = event.changedTouches[0].clientY;
+
+    const diffX = endX - gameState.touchStartX;
+    const diffY = endY - gameState.touchStartY;
+
+    let moved = false;
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        // 水平滑动
+        if (diffX > 30) {
+            moved = moveTiles('right');
+        } else if (diffX < -30) {
+            moved = moveTiles('left');
+        }
+    } else {
+        // 垂直滑动
+        if (diffY > 30) {
+            moved = moveTiles('down');
+        } else if (diffY < -30) {
+            moved = moveTiles('up');
+        }
+    }
+
+    if (moved) {
+        saveHistory();
+        addRandomTile();
+        renderBoard();
+        updateScore();
+
+        if (isGameOver()) {
+            gameState.gameOver = true;
+            setTimeout(() => alert('游戏结束!'), 100);
+        }
     }
 }
 
