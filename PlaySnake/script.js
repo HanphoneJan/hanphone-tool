@@ -53,7 +53,9 @@ document.addEventListener('DOMContentLoaded', function() {
         nextDirection = 'right';
         gameRunning = false;
         generateFood();
-        scoreElement.textContent = score;
+        // 读取最高分数
+    let highScore = localStorage.getItem('snakeHighScore') || 0;
+    scoreElement.textContent = `${score}   |  最高: ${highScore}`;
         
         drawGame();
     }
@@ -73,13 +75,21 @@ document.addEventListener('DOMContentLoaded', function() {
     function endGame() {
         gameRunning = false;
         clearInterval(gameLoop);
+        
+        // 保存最高分数到 localStorage
+        let highScore = localStorage.getItem('snakeHighScore') || 0;
+        if (score > highScore) {
+            localStorage.setItem('snakeHighScore', score);
+            highScore = score;
+        }
+        
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = 'white';
         ctx.font = '24px Microsoft YaHei';
         ctx.textAlign = 'center';
         ctx.fillText('游戏结束', canvas.width / 2, canvas.height / 2 - 10);
-        ctx.fillText(`最终得分: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
+        ctx.fillText(`最终得分: ${score} (最高: ${highScore})`, canvas.width / 2, canvas.height / 2 + 20);
         ctx.fillText('点击屏幕或按空格键重新开始', canvas.width / 2, canvas.height / 2 + 50);
         
         // 添加一次性点击事件监听器，点击后重新开始游戏
@@ -174,7 +184,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // 检查是否吃到食物
         if (head.x === food.x && head.y === food.y) {
             score += 10;
-            scoreElement.textContent = score;
+            // 读取最高分数
+    let highScore = localStorage.getItem('snakeHighScore') || 0;
+    scoreElement.textContent = `${score} (最高: ${highScore})`;
             generateFood();
             // 每得100分增加速度
             if (score % 100 === 0) {
