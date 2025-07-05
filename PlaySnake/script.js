@@ -293,6 +293,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }, false);
+
+    // 添加触摸屏点击重新开始功能
+    canvas.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        if (!gameRunning) {
+            restartAfterGameOver();
+        }
+    }, false);
     
     gridSizeSelect.addEventListener('change', updateGridSize);
     // 开始按钮点击事件
