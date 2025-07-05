@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
         generateFood();
         // 读取最高分数
     let highScore = localStorage.getItem('snakeHighScore') || 0;
-    scoreElement.textContent = `${score}   |  最高: ${highScore}`;
+    scoreElement.textContent = `${score }  | 最高分数：${highScore}`;
         
         drawGame();
     }
