@@ -257,6 +257,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
         }
     });
+
+    // 添加触摸屏控制
+    let touchStartX = 0;
+    let touchStartY = 0;
+    canvas.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }, false);
+
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        if (!gameRunning) return;
+        
+        const touchEndX = e.touches[0].clientX;
+        const touchEndY = e.touches[0].clientY;
+        
+        const dx = touchEndX - touchStartX;
+        const dy = touchEndY - touchStartY;
+        
+        if (Math.abs(dx) > Math.abs(dy)) {
+            // 水平滑动
+            if (dx > 0 && direction !== 'left') {
+                nextDirection = 'right';
+            } else if (dx < 0 && direction !== 'right') {
+                nextDirection = 'left';
+            }
+        } else {
+            // 垂直滑动
+            if (dy > 0 && direction !== 'up') {
+                nextDirection = 'down';
+            } else if (dy < 0 && direction !== 'down') {
+                nextDirection = 'up';
+            }
+        }
+    }, false);
     
     gridSizeSelect.addEventListener('change', updateGridSize);
     // 开始按钮点击事件
