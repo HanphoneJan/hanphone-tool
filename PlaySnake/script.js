@@ -228,21 +228,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // 键盘控制
     document.addEventListener('keydown', function(e) {
         // 防止按键导致页面滚动
-        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 'a', 's', 'd'].includes(e.key)) {
             e.preventDefault();
         }
         
         switch (e.key) {
             case 'ArrowUp':
+            case 'w':
                 if (direction !== 'down') nextDirection = 'up';
                 break;
             case 'ArrowDown':
+            case 's':
                 if (direction !== 'up') nextDirection = 'down';
                 break;
             case 'ArrowLeft':
+            case 'a':
                 if (direction !== 'right') nextDirection = 'left';
                 break;
             case 'ArrowRight':
+            case 'd':
                 if (direction !== 'left') nextDirection = 'right';
                 break;
             case ' ':
