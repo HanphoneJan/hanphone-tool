@@ -80,6 +80,15 @@ document.addEventListener('DOMContentLoaded', function() {
         ctx.textAlign = 'center';
         ctx.fillText('游戏结束', canvas.width / 2, canvas.height / 2 - 10);
         ctx.fillText(`最终得分: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
+        ctx.fillText('点击屏幕或按空格键重新开始', canvas.width / 2, canvas.height / 2 + 50);
+        
+        // 添加一次性点击事件监听器，点击后重新开始游戏
+        canvas.addEventListener('click', restartAfterGameOver, { once: true });
+    }
+    
+    function restartAfterGameOver() {
+        initGame();
+        startGame();
     }
     
     function generateFood() {
@@ -225,7 +234,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (direction !== 'left') nextDirection = 'right';
                 break;
             case ' ':
-                if (!gameRunning) startGame();
+                if (!gameRunning) {
+                    // 如果游戏结束，按空格键重新开始
+                    restartAfterGameOver();
+                }
                 break;
         }
     });
