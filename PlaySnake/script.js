@@ -6,6 +6,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.getElementById('start-btn');
     const gridSizeSelect = document.getElementById('grid-size');
     
+    // 添加速度调节滑动条
+    const speedSlider = document.createElement('input');
+    speedSlider.type = 'range';
+    speedSlider.min = '5';
+    speedSlider.max = '20';
+    speedSlider.value = '8';
+    speedSlider.id = 'speedSlider';
+    speedSlider.style.marginBottom = '16px';
+    startButton.parentNode.insertBefore(speedSlider, startButton);
+    
+    // 更新游戏速度
+    speedSlider.addEventListener('input', function() {
+        speed = parseInt(this.value);
+        if (gameRunning) {
+            clearInterval(gameLoop);
+            gameLoop = setInterval(updateGame, 1000 / speed);
+        }
+    });
+    
     const canvasSize = 400; // 画布大小
     let gridCount = 20; // 默认网格数量
     let gridSize = canvasSize / gridCount; // 网格大小
